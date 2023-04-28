@@ -17,9 +17,12 @@ public class Main {
     public static Random rnd;
 
     public static void battleshipGame() {
-        char[][] gameBoard = setGameBoard();
+        char[][] playerBoard = setGameBoard();
         int[] amountsAndSizes = getSizesAndAmounts();
-        placePlayerSubmarines(gameBoard, amountsAndSizes);
+        //placePlayerSubmarines(playerBoard, amountsAndSizes);
+        char[][] computerBoard = new char[playerBoard.length][playerBoard[0].length];
+        placeComputerSubmarines(computerBoard, amountsAndSizes);
+        printMat(computerBoard);
     }
 
 
@@ -91,7 +94,7 @@ public class Main {
         return amountsAndSizes;
     }
     public static int checkValidity(int x, int y, String orientation, int size, char[][] board){
-        System.out.println("x is: " + x + " y is: " + y + " or is: " + orientation);
+        //System.out.println("x is: " + x + " y is: " + y + " or is: " + orientation);
         int n = board.length;
         int m = board[0].length;
         if (!(orientation.equals("0") || orientation.equals("1")))
@@ -204,6 +207,37 @@ public class Main {
                 addSubmarine(playerBoard,x,y,orientation,size);
                 printMat(playerBoard);
                 errorCode = INVALID_ORIENTATION;
+            }
+        }
+    }
+    /*
+        Returns random integer in the given range, where if low > high -1 will be returned
+     */
+    public static int randomIntInRange(int low, int high) {
+        if(low > high)
+            return -1;
+        else{
+            Random rn = new Random();
+            return rn.nextInt((high-low) +1) + low;
+        }
+    }
+    public static void placeComputerSubmarines(char[][] board, int[] amountsAndSizes){
+        int size; int amount; int x=0; int y=0; boolean valid = false;
+        int n = board.length; int m = board[0].length;
+        String orientation = "";
+        Random rn = new Random();
+        for(int amountIndex = 0; amountIndex < amountsAndSizes.length; amountIndex+= 2){
+            amount = amountsAndSizes[amountIndex];
+            size = amountsAndSizes[amountIndex+1];
+            for(int i = 0; i < amount; i++){
+                while(!valid) {
+                    x = randomIntInRange(0,n-1);
+                    y = randomIntInRange(0,m)-1;
+                    orientation = Integer.toString(randomIntInRange(0,2));
+                    valid = checkValidity(x,y,orientation,size, board) == VALID;
+                }
+                addSubmarine(board,x,y,orientation,size);
+                valid = false;
             }
         }
     }
