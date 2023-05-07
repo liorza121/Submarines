@@ -66,7 +66,7 @@ public class Main {
     public static void fillBoard(char[][] board) {
         /**
          *
-         * @param board - a blanc matrix in the sizes given by the user.
+         * @param board - a blank matrix in the sizes given by the user.
          * this function fills the board with the EMPTY character
          */
         for (int i = 0; i < board.length; i++) {
@@ -173,7 +173,14 @@ public class Main {
         }
         return VALID;
     }
-
+    /**
+     *
+     * @param num - the number whose digits are to be counted
+     * <p>
+     *      this function returns the amount of digits in the number
+     * @returns digit count
+     * </p>
+     */
     public static int countDigits(int num) {
         int count = 0;
         if (num == 0)
@@ -185,6 +192,13 @@ public class Main {
         return count;
     }
 
+    /**
+     *
+     * @param mat - the matrix containing the board to print
+     * <p>
+     *      this function prints the board according to the format
+     * </p>
+     */
     public static void printBoard(char[][] mat) {
         int maxDigits = countDigits(mat.length);
         for(int i = 0; i < maxDigits+1; i++)
@@ -205,6 +219,14 @@ public class Main {
         System.out.println("");
     }
 
+    /**
+     *
+     * @param code - the error code
+     *             <p>
+     *                  this function prints an error message according to the error code.
+     *             </p>
+     *
+     */
     public static void printError(int code) {
         switch (code) {
             case (INVALID_ORIENTATION):
@@ -228,6 +250,17 @@ public class Main {
         }
     }
 
+    /**
+     *
+     * @param playerBoard - the matrix containing the player's board
+     * @param x - the row of the submarine to be added
+     * @param y - the column of the submarine to be added
+     * @param orientation - horizontal or vertical
+     * @param size - the size of the submarine
+     *             <p>
+     *                  this function adds the submarine to the given coordinates, and pads around it with border tiles.
+     *             </p>
+     */
     public static void addSubmarine(char[][] playerBoard, int x, int y, String orientation, int size) {
         int n = playerBoard.length;
         int m = playerBoard[0].length;
@@ -258,6 +291,14 @@ public class Main {
         }
     }
 
+    /**
+     *
+     * @param playerBoard - the matrix containing the player's board
+     * @param amountsAndSizes - an array containing the amount of each size of submarine
+     *      <p>
+     *              places the player's submarines by receiving user inputs
+     *      </p>
+     */
     public static void placePlayerSubmarines(char[][] playerBoard, int[] amountsAndSizes) {
         int size;
         int amount;
@@ -299,6 +340,11 @@ public class Main {
         }
     }
 
+    /**
+     *
+     * @param board - the computer's board
+     * @param amountsAndSizes - an array containing the amount of each size of submarine
+     */
     public static void placeComputerSubmarines(char[][] board, int[] amountsAndSizes) {
         fillBoard(board);
         int size;
@@ -325,6 +371,14 @@ public class Main {
         }
     }
 
+    /**
+     *
+     * @param board - the board to be reset
+     *      <p>
+     *              erases the border tiles
+     *      </p>
+     * @return - returns the same board without the border tiles
+     */
     public static char[][] resetBoard(char[][] board) {
         char[][] hiddenBoard = new char[board.length][board[0].length];
         for (int i = 0; i < board.length; i++) {
@@ -366,6 +420,11 @@ public class Main {
         return false;
     }
 
+    /**
+     *
+     * @param board - the computer's board.
+     * @return - returns the matrix containing the computer's board, replacing submarines with empty tiles.
+     */
     public static char[][] coverCompBoard(char[][] board) {
         char[][] coveredBoard = new char[board.length][board[0].length];
         for (int i = 0; i < board.length; i++) {
@@ -380,6 +439,13 @@ public class Main {
         return coveredBoard;
     }
 
+    /**
+     *
+     * @param x - row
+     * @param y - column
+     * @param board - board to be attacked
+     * @return - returns a fitting error code if the attack was illegal and a valid code if it was legal.
+     */
     public static int checkAttack(int x, int y, char[][] board) {
         if (x < 0 || x >= board.length || y < 0 || y >= board[0].length) {
             return ILLEGAL_TILE;
@@ -390,6 +456,11 @@ public class Main {
         return VALID;
     }
 
+    /**
+     *
+     * @param board - the player's board to be attacked.
+     * @return - returns wether or not a ship was sunk during the attack
+     */
     public static boolean computerAttack(char[][] board) {
         int checked = INVALID_ORIENTATION, x = 0, y = 0;
         while (checked != VALID) {
@@ -410,6 +481,11 @@ public class Main {
         return false;
     }
 
+    /**
+     *
+     * @param amountsAndSizes - an array containing the amount of each size of submarine
+     * @return - the amount of submarines each player has
+     */
     public static int countSubs(int[] amountsAndSizes) {
         int count = 0;
         for (int i = 0; i < amountsAndSizes.length; i += 2)
@@ -417,7 +493,13 @@ public class Main {
         return count;
     }
 
-    //returns true if
+    /**
+     *
+     * @param board - the board to be checked
+     * @param x - row
+     * @param y - column
+     * @return - true if the ship given is horizontal
+     */
     public static boolean checkHorizontal(char[][] board, int x, int y) {
         if (board.length == 1) {
             return true;
@@ -466,6 +548,12 @@ public class Main {
         }
         return true;
     }
+
+    /**
+     *
+     * @param board - player's board
+     * @return - returns the player's board with Xs instead of Vs and -s instead of Xs.
+     */
     public static char[][] coverPlayerBoard(char[][] board){
         char[][] newBoard = new char[board.length][board[0].length];
         for(int i =0; i < board.length; i++){
@@ -481,6 +569,17 @@ public class Main {
         return newBoard;
     }
 
+    /**
+     *
+     * @param playerBoard - player's board
+     * @param computerBoard - computer's board
+     * @param subCount - the amount of submarines on each board
+     *                 <p>
+     *                 the function manages attacks, alternating between computer and player, printing guessing and game boards
+     *                 and when ships are drowned. Returns who won at the end of the game.
+     *                 </p>
+     * @return - returns true if player won, false if computer won.
+     */
     public static boolean manageAttacks(char[][] playerBoard, char[][] computerBoard, int subCount) {
         int playerCount = subCount;
         int compCount = subCount;
